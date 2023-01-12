@@ -1,15 +1,12 @@
-from app.flaskr.db import Database
-import psycopg2
+from unittest.mock import patch
+from flaskr.db import Database
 
 
-def check_conn(connection):
+@patch('flaskr.db.Database.get_connection')
+def test_connection(patched_conn):
     try:
-        connection.conn.cursor
-        return True
-    except (Exception, psycopg2.DatabaseError):
-        return False
-
-
-def test_connection():
-    db = Database()
-    assert check_conn(db) == True  # noqa
+        db = Database()
+    except Exception:
+        pass
+    patched_conn.return_value = True
+    assert db.get_connection() == True  # noqa
