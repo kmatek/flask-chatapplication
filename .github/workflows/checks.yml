@@ -21,6 +21,10 @@ jobs:
         run: |
           printf ${{env.SECRETS}} >> app/.env
       - name: Test
-        run: docker-compose --env-file app/.env run --rm app sh -c "pytest"
+        run: |
+          docker-compose up -d
+          sleep 5
+          docker-compose --env-file app/.env run --rm app sh -c "pytest"
+          docker-compose stop
       - name: Formating
         run: docker-compose --env-file app/.env run --rm app sh -c "flake8"
