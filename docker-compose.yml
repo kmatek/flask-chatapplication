@@ -1,0 +1,34 @@
+version: '3.9'
+
+services:
+  app:
+    restart: always
+    build:
+      context: .
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./app:/app
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=${DEBUG}
+      - HOST=${HOST}
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=${DB_HOST}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_USER=${DB_USER}
+    depends_on:
+      - db
+  
+  db:
+    image: postgres:14.6-alpine
+    restart: always
+    volumes:
+      - dev-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+
+volumes:
+  dev-db-data:
