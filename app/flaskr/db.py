@@ -18,7 +18,7 @@ class Database:
     def close(self) -> None:
         """Close connection to the database."""
         self.conn.close()
-    
+
     def get_connection(self) -> bool:
         """Get connection status boolean."""
         return bool(self.conn)
