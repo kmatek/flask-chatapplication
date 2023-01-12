@@ -22,7 +22,7 @@ jobs:
           printf ${{env.SECRETS}} >> app/.env
       - name: Test
         run: |
-          docker-compose up -d
+          docker-compose --env-file app/.env up -d
           sleep 5
           docker-compose --env-file app/.env run --rm app sh -c "pytest"
           docker-compose stop
