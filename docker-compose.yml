@@ -30,5 +30,16 @@ services:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
 
+  test_db:
+    image: postgres:14.6-alpine
+    restart: always
+    volumes:
+      - test-db-data:/var/lib/postgresql/test-data
+    environment:
+      - POSTGRES_DB=test_db
+      - POSTGRES_USER=test_user
+      - POSTGRES_PASSWORD=test_password
+
 volumes:
   dev-db-data:
+  test-db-data:
