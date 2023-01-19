@@ -1,11 +1,18 @@
 {% extends "index.html" %}
 
 {% block content %}
-<form action="POST">
+<form method="POST">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <p class="text-center text-danger">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
     <div class="form-outline">
-        <input type="text" id="typeText" class="form-control" />
-        <label class="form-label" for="typeText">Enter your name</label>
+        <input type="text" name="inputName" id="inputName" class="form-control" />
+        <label class="form-label" for="inputName">Enter your name</label>
         </div>
-    <button type="button" class="w-100 mt-2 btn btn-primary">Enter chat</button>
+    <button type="submit" class="w-100 mt-2 btn btn-primary">Enter chat</button>
 </form>
 {% endblock %}

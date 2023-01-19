@@ -15,8 +15,9 @@ def create_app():
     except OSError:
         pass
 
-    @app.route("/hello")
-    def hello():
-        return '<p>Hello World!</p>'
+    with app.app_context():
+        from .views import view
+
+        app.register_blueprint(view, url_prefix="/")
 
     return app
