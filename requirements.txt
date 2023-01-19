@@ -4,3 +4,4 @@ eventlet>=0.33.2, <0.33.3
 flake8>=6.0.0, <6.0.1
 pytest>=7.2.0, <7.2.1
 psycopg2-binary>=2.9.5, <2.9.6
+dnspython>=2.2.1, <2.2.2
