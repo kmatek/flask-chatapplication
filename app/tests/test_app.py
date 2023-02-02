@@ -1,3 +1,4 @@
+import json
 import pytest
 
 
@@ -25,3 +26,17 @@ def test_logout(client):
     with client.session_transaction() as session:
         with pytest.raises(KeyError):
             session['name']
+
+
+def test_get_name(client):
+    """Testing get_name view"""
+    response = client.get('/get-name')
+    data = json.loads(response.data)
+
+    assert data['name'] == ""
+
+    client.post('/login', data={'inputName': 'test'})
+    response = client.get('/get-name')
+    data = json.loads(response.data)
+
+    assert data['name'] == "test"
