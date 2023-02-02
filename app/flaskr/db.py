@@ -1,7 +1,9 @@
 import os
 from datetime import datetime
-from typing import List, Tuple
+from typing import List, Tuple, Dict, Any
 import psycopg2
+
+JsonDict = Dict[str, Any]
 
 
 class Database:
@@ -39,12 +41,16 @@ class Database:
             (id SERIAL PRIMARY KEY, name varchar, content varchar, time timestamp)""") # noqa
         self.conn.commit()
 
-    def save_message(self, name: str, msg: str, datetime: datetime) -> None:
+    def save_message(self, json: JsonDict) -> None:
         """Save message in the table."""
+        message = json.get('message')
+        name = json.get('name')
+        date = datetime.strptime(json.get('date'), "%d.%m.%Y, %H:%M:%S")
+
         self.cursor.execute(
             """INSERT INTO Messages (name, content, time)
             VALUES (%s, %s, %s)""",
-            (name, msg, datetime))
+            (name, message, date))
         self.conn.commit()
 
     def get_messages(self, limit: int = 100) -> List[Tuple]:

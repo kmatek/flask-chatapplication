@@ -12,9 +12,15 @@ def test_creating_table_and_saving_message(test_db):
     """Tests creating table while initial database."""
     conn = test_db
     # Save message
-    conn.save_message('test', 'test_message', datetime.now())
+    datas = {
+        'message': 'test',
+        'name': 'test',
+        'date': '1.01.2023, 12:00:00'
+    }
+    conn.save_message(datas)
     conn.cursor.execute("SELECT * FROM Messages;")
 
     result = conn.cursor.fetchall()
 
+    assert type(result[0][3]) == datetime
     assert len(result) == 1

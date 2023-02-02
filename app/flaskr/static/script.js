@@ -2,15 +2,14 @@ const addMessages = (msg) => {
     if (msg.message === undefined || msg.message === ''){return;};
 
     let loggedUser = getCookie('username');
-    let date = new Date();
 
     if (loggedUser === msg.name) {
         // right side
-        console.log(msg.message, loggedUser, date.toLocaleString(), 'right side');
+        console.log(msg.message, loggedUser, msg.date, 'right side');
     }
     else {
         // left side
-        console.log(msg.message, msg.name, date.toLocaleString(), 'left side');
+        console.log(msg.message, msg.name, msg.date, 'left side');
     };
 };
 
@@ -47,10 +46,20 @@ socket.on('connect', async () => {
         
         let msgInput = document.getElementById('msgInput');
         let inputValue = msgInput.value;
+        // block saving empty message
+        if (inputValue === '') {
+            return;
+        }
+
+        let date = new Date()
         // clear msg input
         msgInput.value = '';
         // push message
-        socket.emit('event', {message: inputValue, name: userName})
+        socket.emit('event', {
+            message: inputValue,
+            name: userName,
+            date: date.toLocaleString()
+        })
     })
 });
 
