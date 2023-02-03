@@ -1,28 +1,10 @@
 {% extends "index.html" %}
-
 {% block content %}
-<div class="w-100 h-100">
-    <!-- div to scrolling messages -->
-    <div id='msgContainer' style="overflow: auto; height: 405px;">
-        <!-- stranger -->
-        <!-- <div style="min-height: 45px; overflow-wrap: break-word;" class="p-1 m-0 w-100 border-bottom">
-            <b>NAME </b>
-            text
-            <p style="font-size: 12px;" class="m-0">date</p>
-        </div> -->
-        <!-- logged person -->
-        <!-- <div style="min-height: 45px; overflow-wrap: break-word; text-align: right;" class="p-2 m-0 w-100 border-bottom">
-            text
-            <b> NAME</b>
-            <p style="font-size: 12px;" class="m-0">date</p>
-        </div> -->
-    </div>
-    <!-- type message -->
-    <form id="msgForm" action="" style="height: 45px;" class="form-inline border-top border-dark p-1 d-flex justify-content-between">
-        <input type="text" placeholder="Enter a message" id='msgInput' class="w-50 m-0 p-0" style="border: none;">
-        <button type="submit" class="btn btn-primary">send</button>
-    </form>
-</div>
+<div class="msg-wrapper" id="msgWrapper"></div>
+<form id="msgForm" class="msg-form form-inline">
+    <input type="text" id="msgInput" class="w-50" placeholder="Enter a message">
+    <button type="submit" class="btn btn-primary w-25">send</button>
+</form>
 {% endblock %}
 {% block script %}
 <script type="text/javascript" src="{{ url_for('static', filename='script.js') }}"></script>

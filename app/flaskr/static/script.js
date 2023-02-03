@@ -1,15 +1,35 @@
 const addMessages = (msg) => {
     // add messages to chat
     let loggedUser = getCookie('username');
+    let msgContainer = document.getElementById('msgWrapper');
+    let messageDiv = document.createElement('div');
+    let messageText = document.createElement('p');
+    let dateSmall = document.createElement('small');
+    let nameB = document.createElement('b');
+    let nameAndDateP = document.createElement('p');
+    dateSmall.textContent = msg.date;
+    messageText.textContent = msg.message;
+    nameAndDateP.className = "msg-name-date";
 
     if (loggedUser === msg.name) {
         // right side
-        console.log(msg.message, loggedUser, msg.date, 'right side');
+        messageDiv.className = "message text-right";
+        nameB.textContent = ` ${loggedUser}`;
+        nameAndDateP.appendChild(dateSmall);
+        nameAndDateP.appendChild(nameB);
     }
     else {
         // left side
-        console.log(msg.message, msg.name, msg.date, 'left side');
+        messageDiv.className = "message";
+        nameB.textContent = `${msg.name} `;
+        nameAndDateP.appendChild(nameB);
+        nameAndDateP.appendChild(dateSmall);
     };
+
+    messageDiv.appendChild(messageText);
+    messageDiv.appendChild(nameAndDateP);
+    msgContainer.appendChild(messageDiv);
+    msgContainer.scrollTop = msgContainer.scrollHeight;
 };
 
 const getName = async () => {
