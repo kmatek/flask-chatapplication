@@ -1,5 +1,7 @@
 from flask import Blueprint
-from flask import render_template, redirect, session, request, url_for, flash, jsonify # noqa
+from flask import render_template, redirect, session, request, url_for, flash, jsonify, current_app # noqa
+
+from .db import Database
 
 view = Blueprint("views", __name__)
 
@@ -44,3 +46,23 @@ def get_name() -> jsonify:
     if NAME_SESSION_KEY in session:
         data['name'] = session[NAME_SESSION_KEY]
     return jsonify(data)
+
+
+@view.route('/get-messages')
+def get_messages() -> jsonify:
+    """Get old messages"""
+    if current_app.config.get('TESTING', False):
+        db = Database(test=True)
+    else:
+        db = Database()
+
+    messages = db.get_messages(limit=50)
+    mapped_msg = map(
+        lambda x: {
+            'name': x[1],
+            'message': x[2],
+            'date': str(x[3])[:-3]
+        }, messages)
+    db.close()
+
+    return jsonify(list(mapped_msg))

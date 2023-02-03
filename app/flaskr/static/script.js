@@ -1,6 +1,5 @@
 const addMessages = (msg) => {
-    if (msg.message === undefined || msg.message === ''){return;};
-
+    // add messages to chat
     let loggedUser = getCookie('username');
 
     if (loggedUser === msg.name) {
@@ -22,7 +21,7 @@ const getName = async () => {
             console.log('something gone wrong.');
             return;
         } return data.name;
-    } catch (error) {console.log(error);};
+    } catch (error) { console.log(error); };
 };
 
 const getCookie = (cname) => {
@@ -30,12 +29,12 @@ const getCookie = (cname) => {
     let decodedCookie = decodeURIComponent(document.cookie);
     let match = decodedCookie.match(new RegExp(name + "([^;]+)"));
 
-    if (match) {return match[1];}
+    if (match) { return match[1]; }
     return;
 }
 
-const socket = io.connect("http://" + document.domain + ":" + location.port);
 
+const socket = io.connect("http://" + document.domain + ":" + location.port);
 socket.on('connect', async () => {
     // save username to cookies
     let userName = await getName()
@@ -58,11 +57,30 @@ socket.on('connect', async () => {
         socket.emit('event', {
             message: inputValue,
             name: userName,
-            date: date.toLocaleString()
+            date: date.toLocaleString([],{
+                year: 'numeric', 
+                month: 'numeric', 
+                day: 'numeric', 
+                hour: '2-digit',
+                minute: '2-digit'
+            })
         })
     })
 });
 
-socket.on("message response", (msg) => {
-    addMessages(msg);
-});
+socket.on("message response", (msg) => { addMessages(msg); });
+
+// load old messages
+window.onload = async () => {
+    try {
+        const response = await fetch("/get-messages");
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.log('something gone wrong.');
+            return;
+        }
+
+        data.forEach(element => { addMessages(element) });
+    } catch (error) { console.log(error); };
+}

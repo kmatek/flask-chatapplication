@@ -23,11 +23,6 @@ def client(app):
 
 
 @pytest.fixture()
-def runner(app):
-    return app.test_cli_runner()
-
-
-@pytest.fixture(scope='module')
 def test_db():
     conn = Database(test=True)
 

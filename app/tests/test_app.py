@@ -40,3 +40,22 @@ def test_get_name(client):
     data = json.loads(response.data)
 
     assert data['name'] == "test"
+
+
+def test_get_messages(client, test_db):
+    """Testing get_messages view"""
+    data = {
+        'message': 'test',
+        'name': 'testname',
+        'date': '1.01.2023, 12:00'
+    }
+    conn = test_db
+    conn.save_message(data)
+
+    response = client.get('/get-messages')
+    messages = json.loads(response.data)
+
+    assert len(messages) == 1
+    assert messages[0]['message'] == 'test'
+    assert messages[0]['name'] == 'testname'
+    assert messages[0]['date'] == '2023-01-01 12:00'

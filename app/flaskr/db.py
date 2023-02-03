@@ -8,7 +8,7 @@ JsonDict = Dict[str, Any]
 
 class Database:
     """Databse config for an application."""
-    def __init__(self, test: bool = None):
+    def __init__(self, test: bool = False):
         self.conn = False
 
         try:
@@ -45,7 +45,7 @@ class Database:
         """Save message in the table."""
         message = json.get('message')
         name = json.get('name')
-        date = datetime.strptime(json.get('date'), "%d.%m.%Y, %H:%M:%S")
+        date = datetime.strptime(json.get('date'), "%d.%m.%Y, %H:%M")
 
         self.cursor.execute(
             """INSERT INTO Messages (name, content, time)

@@ -12,12 +12,12 @@ def test_creating_table_and_saving_message(test_db):
     """Tests creating table while initial database."""
     conn = test_db
     # Save message
-    datas = {
+    data = {
         'message': 'test',
         'name': 'test',
-        'date': '1.01.2023, 12:00:00'
+        'date': '1.01.2023, 12:00'
     }
-    conn.save_message(datas)
+    conn.save_message(data)
     conn.cursor.execute("SELECT * FROM Messages;")
 
     result = conn.cursor.fetchall()
