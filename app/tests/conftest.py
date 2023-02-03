@@ -28,5 +28,6 @@ def test_db():
 
     yield conn
 
-    conn.clear_table()
+    conn.clear_messages_table()
+    conn.clear_names_table()
     conn.close()

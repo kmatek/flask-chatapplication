@@ -15,10 +15,18 @@ def login():
         return redirect(url_for('views.home'))
 
     if request.method == 'POST':
-        name = request.form["inputName"]
+        if current_app.config.get('TESTING', False):
+            db = Database(test=True)
+        else:
+            db = Database()
+        name = request.form["inputName"].lower()
+
         if len(name) >= 3:
-            session[NAME_SESSION_KEY] = name
-            return redirect(url_for('views.home'))
+            if db.save_name(name):
+                session[NAME_SESSION_KEY] = name
+                return redirect(url_for('views.home'))
+            else:
+                flash("Someone already is using this name.")
         else:
             flash("Name must be longer than 2 character.")
     return render_template('login.html')
@@ -26,7 +34,14 @@ def login():
 
 @view.route("/logout")
 def logout():
-    session.pop(NAME_SESSION_KEY, None)
+    name = session.pop(NAME_SESSION_KEY, None)
+    # Remove name
+    if current_app.config.get('TESTING', False):
+        db = Database(test=True)
+    else:
+        db = Database()
+    db.remove_name(name)
+    db.close()
     return redirect(url_for("views.home"))
 
 

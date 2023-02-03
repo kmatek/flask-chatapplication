@@ -40,6 +40,8 @@ class Database:
             """CREATE TABLE IF NOT EXISTS Messages
             (id SERIAL PRIMARY KEY, name varchar, content varchar, time timestamp)""") # noqa
         self.conn.commit()
+        self.cursor.execute("""CREATE TABLE IF NOT EXISTS LoggedUsers (name varchar UNIQUE)""") # noqa
+        self.conn.commit()
 
     def save_message(self, json: JsonDict) -> None:
         """Save message in the table."""
@@ -59,7 +61,30 @@ class Database:
         result = self.cursor.fetchall()[:limit]
         return result
 
-    def clear_table(self) -> None:
+    def clear_messages_table(self) -> None:
         """Helper method for tests."""
         self.cursor.execute('TRUNCATE TABLE Messages;')
+        self.conn.commit()
+
+    def save_name(self, name: str) -> bool:
+        """Save the name of the user currently is using chat"""
+        # Check that name is already used
+        try:
+            self.cursor.execute(
+                """INSERT INTO LoggedUsers (name) VALUES (%s);""", (name,))
+            self.conn.commit()
+            return True
+        except psycopg2.errors.UniqueViolation:
+            self.conn.rollback()
+            return False
+
+    def remove_name(self, name: str) -> None:
+        """Remove user's name when leaving the chat room."""
+        # Check that name is not deleted
+        self.cursor.execute("DELETE FROM LoggedUsers WHERE name LIKE %s", (name,)) # noqa
+        self.conn.commit()
+
+    def clear_names_table(self) -> None:
+        """Helper method for tests."""
+        self.cursor.execute('TRUNCATE TABLE LoggedUsers;')
         self.conn.commit()

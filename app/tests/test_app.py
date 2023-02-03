@@ -2,8 +2,9 @@ import json
 import pytest
 
 
-def test_login(client):
+def test_login(client, test_db):
     """Testing login and redirect."""
+    conn = test_db # noqa
     client.post('/login', data={'inputName': 'te'})
     with client.session_transaction() as session:
         with pytest.raises(KeyError):
@@ -16,8 +17,9 @@ def test_login(client):
     assert '/' == response.location
 
 
-def test_logout(client):
+def test_logout(client, test_db):
     """Testing logout"""
+    conn = test_db # noqa
     client.post('/login', data={'inputName': 'test'})
     with client.session_transaction() as session:
         assert 'test' == session['name']
@@ -28,8 +30,9 @@ def test_logout(client):
             session['name']
 
 
-def test_get_name(client):
+def test_get_name(client, test_db):
     """Testing get_name view"""
+    conn = test_db # noqa
     response = client.get('/get-name')
     data = json.loads(response.data)
 
