@@ -10,15 +10,16 @@ services:
     volumes:
       - ./app:/app
     environment:
-      - SECRET_KEY=${SECRET_KEY}
-      - DEBUG=${DEBUG}
-      - HOST=${HOST}
-      - DB_NAME=${DB_NAME}
-      - DB_HOST=${DB_HOST}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_USER=${DB_USER}
+      - SECRET_KEY=secret_key
+      - DEBUG=True
+      - HOST=0.0.0.0
+      - DB_NAME=flaskdev_db
+      - DB_HOST=db
+      - DB_PASSWORD=flaskdev_pass
+      - DB_USER=flaskdev
     depends_on:
-      - db
+      db:
+        condition: service_healthy
   
   db:
     image: postgres:14.6-alpine
@@ -26,9 +27,14 @@ services:
     volumes:
       - dev-db-data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=flaskdev_db
+      - POSTGRES_USER=flaskdev
+      - POSTGRES_PASSWORD=flaskdev_pass
+    healthcheck:
+        test: ["CMD-SHELL", "pg_isready -d flaskdev_db -U flaskdev"]
+        interval: 2s
+        timeout: 5s
+        retries: 5
 
   test_db:
     image: postgres:14.6-alpine
